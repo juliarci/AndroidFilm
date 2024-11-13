@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,10 +28,16 @@ import com.example.firstapplication.ui.theme.FirstApplicationTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Profil
+class Profile
 
 @Serializable
 class Films
+
+@Serializable
+class Series
+
+@Serializable
+class Actors
 
 class MainActivity : ComponentActivity() {
 
@@ -45,17 +53,8 @@ class MainActivity : ComponentActivity() {
             FirstApplicationTheme {
                 Scaffold(
                     bottomBar = {
-                        if (currentDestination?.hasRoute<Profil>() == false) {
+                        if (currentDestination?.hasRoute<Profile>() == false) {
                             NavigationBar {
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            Icons.Rounded.AccountCircle,
-                                            contentDescription = "Menu Icon"
-                                        )
-                                    }, label = { Text("Mon profil") },
-                                    selected = currentDestination.hasRoute<Profil>(),
-                                    onClick = { navController.navigate(Profil()) })
                                 NavigationBarItem(
                                     icon = {
                                         Icon(
@@ -65,13 +64,30 @@ class MainActivity : ComponentActivity() {
                                     }, label = { Text("Page films") },
                                     selected = currentDestination.hasRoute<Films>(),
                                     onClick = { navController.navigate(Films()) })
+                                NavigationBarItem(
+                                    icon = {
+                                        Icon(
+                                            Icons.Rounded.PlayArrow,
+                                            contentDescription = "Series Icon"
+                                        )
+                                    }, label = { Text("Page séries") },
+                                    selected = currentDestination.hasRoute<Series>(),
+                                    onClick = { navController.navigate(Series()) })
+                                NavigationBarItem(
+                                    icon = {
+                                        Icon(
+                                            Icons.Rounded.Person,
+                                            contentDescription = "Actors Icon"
+                                        )
+                                    }, label = { Text("Page acteurs") },
+                                    selected = currentDestination.hasRoute<Actors>(),
+                                    onClick = { navController.navigate(Actors()) })
                             }
                         }
                     }) { innerPadding ->
-                    NavHost(navController = navController, startDestination = Profil()) {
+                    NavHost(navController = navController, startDestination = Profile()) {
 
-
-                        composable<Profil> {
+                        composable<Profile> {
                             Profil(
                                 modifier = Modifier.padding(innerPadding),
                                 windowSizeClass, navController
@@ -79,6 +95,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<Films> {
                             FilmsFun(navController, viewModel, "Hobbit")
+                        }
+                        composable<Actors> {
+                            ActorsFun()
+                        }
+                        composable<Series> {
+                            SeriesFun(navController, viewModel, "Is")
                         }
                     }
                 }

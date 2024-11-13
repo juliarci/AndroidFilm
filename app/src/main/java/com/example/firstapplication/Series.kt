@@ -28,9 +28,9 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
 @Composable
-fun FilmsFun(navController: NavHostController, viewModel: MainViewModel, name: String) {
-    val movies by viewModel.movies.collectAsState()
-    if (movies.isEmpty()) viewModel.searchMovies(name)
+fun SeriesFun(navController: NavHostController, viewModel: MainViewModel, name: String){
+    val series by viewModel.series.collectAsState()
+    if(series.isEmpty()) viewModel.searchSeries(name)
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             LazyVerticalGrid(
@@ -38,7 +38,7 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel, name: S
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(movies) { movie ->
+                items(series) { serie ->
                     Column {
                         ElevatedCard(
                             elevation = CardDefaults.cardElevation(
@@ -46,21 +46,21 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel, name: S
                             ),modifier = Modifier
                                 .size(width = 200.dp, height = 424.dp)
                         ) {
-                                AsyncImage(
-                                    model = "https://image.tmdb.org/t/p/w780/" + movie.poster_path,
-                                    contentDescription = "Image du film"
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .padding(16.dp),
-                                    textAlign = TextAlign.Center,
-                                    text = movie.original_title
-                                )
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w780/" + serie.poster_path,
+                                contentDescription = "Image de la série"
+                            )
                             Text(
                                 modifier = Modifier
                                     .padding(16.dp),
                                 textAlign = TextAlign.Center,
-                                text = movie.release_date
+                                text = serie.original_name
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .padding(16.dp),
+                                textAlign = TextAlign.Center,
+                                text = serie.first_air_date
                             )
                         }
                     }
@@ -77,4 +77,5 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel, name: S
             }
         }
     }
+
 }
