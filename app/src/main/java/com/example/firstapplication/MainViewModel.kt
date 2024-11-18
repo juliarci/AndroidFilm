@@ -1,13 +1,12 @@
 package com.example.firstapplication
 
+import FilmDetail
 import Movie
 import Person
 import TvShow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -18,6 +17,7 @@ class MainViewModel : ViewModel() {
     val movies = MutableStateFlow<List<Movie>>(listOf())
     val series = MutableStateFlow<List<TvShow>>(listOf())
     val persons = MutableStateFlow<List<Person>>(listOf())
+    val filmDetail = MutableStateFlow<FilmDetail?>(null)
 
     private val apiKey = "ca096d89c07f759c710e701ad181fd06"
     private val service = Retrofit.Builder().baseUrl("https://api.themoviedb.org/3/")
@@ -32,31 +32,36 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun trendingFilms(){
+    fun trendingFilms() {
         viewModelScope.launch {
             movies.value = service.getTrendingFilms(apiKey).results
         }
     }
 
+    fun filmDetail(id: String){
+        viewModelScope.launch {
+            filmDetail.value = service.getDetailFilm(apiKey = apiKey, filmId = id)
+        }
+    }
     fun searchSeries(keyWord: String) {
         viewModelScope.launch {
             series.value = service.getSeriesByKeyWord(apiKey, keyWord).results
         }
     }
 
-    fun trendingSeries(){
+    fun trendingSeries() {
         viewModelScope.launch {
             series.value = service.getTrendingSeries(apiKey).results
         }
     }
 
-    fun searchPersons(keyWord: String){
+    fun searchPersons(keyWord: String) {
         viewModelScope.launch {
             persons.value = service.getPersonByKeyWord(apiKey, keyWord).results
         }
     }
 
-    fun trendingPersons(){
+    fun trendingPersons() {
         viewModelScope.launch {
             persons.value = service.getTrendingPersons(apiKey).results
         }

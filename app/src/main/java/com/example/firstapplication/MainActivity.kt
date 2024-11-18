@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.firstapplication.ui.theme.FirstApplicationTheme
 import kotlinx.serialization.Serializable
 
@@ -40,6 +40,9 @@ class Profile
 
 @Serializable
 class Films
+
+@Serializable
+data class Film(val id: String)
 
 @Serializable
 class Series
@@ -74,7 +77,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 },
                                 query = searchText,
-                                onQueryChange = {searchText = it},
+                                onQueryChange = { searchText = it },
                                 onSearch = {
                                     searchText = it
                                     if (currentDestination.hasRoute<Films>()) {
@@ -149,10 +152,13 @@ class MainActivity : ComponentActivity() {
                         composable<Series> {
                             SeriesFun(navController, viewModel)
                         }
+                        composable<Film> { backStackEntry ->
+                            val filmDetail: Film = backStackEntry.toRoute()
+                            FilmFun(viewModel, filmDetail.id)
+                        }
                     }
                 }
             }
         }
     }
-
 }

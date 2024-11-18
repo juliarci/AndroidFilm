@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 @Composable
 fun FilmsFun(navController: NavHostController, viewModel: MainViewModel) {
     val movies by viewModel.movies.collectAsState()
+    var movieId: Int
 
    LaunchedEffect(true) {
         viewModel.trendingFilms()
@@ -46,10 +47,15 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel) {
                 items(movies) { movie ->
                     Column {
                         ElevatedCard(
+                            onClick = {
+                                movieId = movie.id
+                                navController.navigate(Film(movieId.toString()))
+                            },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp
                             ), modifier = Modifier
                                 .size(width = 200.dp, height = 424.dp)
+
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w780/" + movie.poster_path,

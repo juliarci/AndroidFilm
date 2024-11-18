@@ -1,10 +1,12 @@
 package com.example.firstapplication
 
+import FilmDetail
 import Person
 import PersonResponse
 import TmdbResult
 import TvShowsResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbAPI {
@@ -18,6 +20,12 @@ interface TmdbAPI {
         @Query("api_key") apiKey: String,
         @Query("query") keyWord: String
     ): TmdbResult
+
+    @GET("movie/{id}")
+    suspend fun getDetailFilm(
+        @Path("id") filmId: String,
+        @Query("api_key") apiKey: String
+    ): FilmDetail
 
     @GET("trending/tv/week")
     suspend fun getTrendingSeries(
