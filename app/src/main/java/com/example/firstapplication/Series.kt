@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,9 +29,12 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
 @Composable
-fun SeriesFun(navController: NavHostController, viewModel: MainViewModel, name: String){
+fun SeriesFun(navController: NavHostController, viewModel: MainViewModel){
     val series by viewModel.series.collectAsState()
-    if(series.isEmpty()) viewModel.searchSeries(name)
+
+    LaunchedEffect(true) {
+        viewModel.trendingSeries()
+    }
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             LazyVerticalGrid(

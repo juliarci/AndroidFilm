@@ -5,20 +5,28 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -41,17 +49,51 @@ class Actors
 
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel: MainViewModel by viewModels()
         enableEdgeToEdge()
         setContent {
+            var searchText by remember { mutableStateOf("") }
+            var isSearching by remember { mutableStateOf(false) }
             val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
             val navController = rememberNavController()
             val backStack by navController.currentBackStackEntryAsState()
             val currentDestination = backStack?.destination
             FirstApplicationTheme {
                 Scaffold(
+                    topBar = {
+                        if (currentDestination?.hasRoute<Profile>() == false) {
+                            SearchBar(
+                                content = {
+                                    Text(
+                                        text = "Saisissez un mot-clé pour commencer votre recherche",
+                                        modifier = Modifier.padding(8.dp),
+                                        color = Color.Gray
+                                    )
+                                },
+                                query = searchText,
+                                onQueryChange = {searchText = it},
+                                onSearch = {
+                                    searchText = it
+                                    if (currentDestination.hasRoute<Films>()) {
+                                        viewModel.searchMovies(it)
+                                    } else if (currentDestination.hasRoute<Series>()) {
+                                        viewModel.searchSeries(it)
+                                    } else if (currentDestination.hasRoute<Actors>()) {
+                                        viewModel.searchPersons(it)
+                                    }
+                                    isSearching = false
+                                },
+                                active = isSearching,
+                                onActiveChange = { isSearching = it },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                            )
+                        }
+                    },
                     bottomBar = {
                         if (currentDestination?.hasRoute<Profile>() == false) {
                             NavigationBar {
@@ -63,7 +105,10 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }, label = { Text("Page films") },
                                     selected = currentDestination.hasRoute<Films>(),
-                                    onClick = { navController.navigate(Films()) })
+                                    onClick = {
+                                        navController.navigate(Films())
+                                        searchText = ""
+                                    })
                                 NavigationBarItem(
                                     icon = {
                                         Icon(
@@ -72,7 +117,10 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }, label = { Text("Page séries") },
                                     selected = currentDestination.hasRoute<Series>(),
-                                    onClick = { navController.navigate(Series()) })
+                                    onClick = {
+                                        navController.navigate(Series())
+                                        searchText = ""
+                                    })
                                 NavigationBarItem(
                                     icon = {
                                         Icon(
@@ -86,7 +134,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }) { innerPadding ->
                     NavHost(navController = navController, startDestination = Profile()) {
-
                         composable<Profile> {
                             Profil(
                                 modifier = Modifier.padding(innerPadding),
@@ -94,13 +141,13 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<Films> {
-                            FilmsFun(navController, viewModel, "Hobbit")
+                            FilmsFun(navController, viewModel)
                         }
                         composable<Actors> {
-                            ActorsFun()
+                            ActorsFun(navController, viewModel)
                         }
                         composable<Series> {
-                            SeriesFun(navController, viewModel, "Is")
+                            SeriesFun(navController, viewModel)
                         }
                     }
                 }

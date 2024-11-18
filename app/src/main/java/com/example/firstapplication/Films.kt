@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,9 +29,13 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
 @Composable
-fun FilmsFun(navController: NavHostController, viewModel: MainViewModel, name: String) {
+fun FilmsFun(navController: NavHostController, viewModel: MainViewModel) {
     val movies by viewModel.movies.collectAsState()
-    if (movies.isEmpty()) viewModel.searchMovies(name)
+
+   LaunchedEffect(true) {
+        viewModel.trendingFilms()
+    }
+
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             LazyVerticalGrid(
@@ -43,19 +48,19 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel, name: S
                         ElevatedCard(
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp
-                            ),modifier = Modifier
+                            ), modifier = Modifier
                                 .size(width = 200.dp, height = 424.dp)
                         ) {
-                                AsyncImage(
-                                    model = "https://image.tmdb.org/t/p/w780/" + movie.poster_path,
-                                    contentDescription = "Image du film"
-                                )
-                                Text(
-                                    modifier = Modifier
-                                        .padding(16.dp),
-                                    textAlign = TextAlign.Center,
-                                    text = movie.original_title
-                                )
+                            AsyncImage(
+                                model = "https://image.tmdb.org/t/p/w780/" + movie.poster_path,
+                                contentDescription = "Image du film"
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .padding(16.dp),
+                                textAlign = TextAlign.Center,
+                                text = movie.original_title
+                            )
                             Text(
                                 modifier = Modifier
                                     .padding(16.dp),
