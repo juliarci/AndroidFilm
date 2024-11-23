@@ -1,8 +1,8 @@
 package com.example.firstapplication
 
 import FilmDetail
-import Person
 import PersonResponse
+import SerieDetail
 import TmdbResult
 import TvShowsResponse
 import retrofit2.http.GET
@@ -21,11 +21,17 @@ interface TmdbAPI {
         @Query("query") keyWord: String
     ): TmdbResult
 
-    @GET("movie/{id}")
+    @GET("movie/{id}?append_to_response=credits")
     suspend fun getDetailFilm(
         @Path("id") filmId: String,
         @Query("api_key") apiKey: String
     ): FilmDetail
+
+    @GET("tv/{id}?append_to_response=credits")
+    suspend fun getDetailSerie(
+        @Path("id") serieId: String,
+        @Query("api_key") apiKey: String
+    ): SerieDetail
 
     @GET("trending/tv/week")
     suspend fun getTrendingSeries(

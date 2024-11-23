@@ -3,6 +3,7 @@ package com.example.firstapplication
 import FilmDetail
 import Movie
 import Person
+import SerieDetail
 import TvShow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ class MainViewModel : ViewModel() {
     val series = MutableStateFlow<List<TvShow>>(listOf())
     val persons = MutableStateFlow<List<Person>>(listOf())
     val filmDetail = MutableStateFlow<FilmDetail?>(null)
+    val serieDetail = MutableStateFlow<SerieDetail?>(null)
 
     private val apiKey = "ca096d89c07f759c710e701ad181fd06"
     private val service = Retrofit.Builder().baseUrl("https://api.themoviedb.org/3/")
@@ -54,7 +56,11 @@ class MainViewModel : ViewModel() {
             series.value = service.getTrendingSeries(apiKey).results
         }
     }
-
+fun serieDetail(id: String){
+    viewModelScope.launch {
+        serieDetail.value = service.getDetailSerie(apiKey = apiKey, serieId = id)
+    }
+}
     fun searchPersons(keyWord: String) {
         viewModelScope.launch {
             persons.value = service.getPersonByKeyWord(apiKey, keyWord).results

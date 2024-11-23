@@ -40,7 +40,9 @@ fun ActorsFun(navController: NavHostController, viewModel: MainViewModel){
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .padding(top = 120.dp, start = 20.dp, end = 20.dp)
             ) {
                 items(actors) { actor ->
                     Column {
@@ -48,7 +50,7 @@ fun ActorsFun(navController: NavHostController, viewModel: MainViewModel){
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp
                             ),modifier = Modifier
-                                .size(width = 200.dp, height = 424.dp)
+                                .size(width = 200.dp, height = 350.dp)
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w780/" + actor.profile_path,

@@ -8,11 +8,14 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -48,6 +51,9 @@ data class Film(val id: String)
 class Series
 
 @Serializable
+data class Serie(val id: String)
+
+@Serializable
 class Actors
 
 class MainActivity : ComponentActivity() {
@@ -64,39 +70,48 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val backStack by navController.currentBackStackEntryAsState()
             val currentDestination = backStack?.destination
-            FirstApplicationTheme {
-                Scaffold(
-                    topBar = {
-                        if (currentDestination?.hasRoute<Profile>() == false) {
-                            SearchBar(
-                                content = {
-                                    Text(
-                                        text = "Saisissez un mot-clé pour commencer votre recherche",
-                                        modifier = Modifier.padding(8.dp),
-                                        color = Color.Gray
-                                    )
-                                },
-                                query = searchText,
-                                onQueryChange = { searchText = it },
-                                onSearch = {
-                                    searchText = it
-                                    if (currentDestination.hasRoute<Films>()) {
-                                        viewModel.searchMovies(it)
-                                    } else if (currentDestination.hasRoute<Series>()) {
-                                        viewModel.searchSeries(it)
-                                    } else if (currentDestination.hasRoute<Actors>()) {
-                                        viewModel.searchPersons(it)
+            FirstApplicationTheme {Scaffold(
+                topBar = {
+                    if (currentDestination?.hasRoute<Profile>() == false && !currentDestination.hasRoute<Film>()  && !currentDestination.hasRoute<Serie>()) {
+                        SearchBar(
+                            leadingIcon = {
+                                if (isSearching) {
+                                    IconButton(onClick = {
+                                        searchText = ""
+                                        isSearching = false
+                                    }) {
+                                        Icon(Icons.Default.Close, contentDescription = "Close search")
                                     }
-                                    isSearching = false
-                                },
-                                active = isSearching,
-                                onActiveChange = { isSearching = it },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                            )
-                        }
-                    },
+                                } else {
+                                    Icon(Icons.Default.Search, contentDescription = "Search")
+                                }
+                            },
+                            content = {
+                                Text(
+                                    text = "Saisissez un mot-clé pour commencer votre recherche",
+                                    modifier = Modifier.padding(8.dp),
+                                    color = Color.Gray
+                                )
+                            },
+                            query = searchText,
+                            onQueryChange = { searchText = it },
+                            onSearch = {
+                                searchText = it
+                                when {
+                                    currentDestination.hasRoute<Films>() -> viewModel.searchMovies(it)
+                                    currentDestination.hasRoute<Series>() -> viewModel.searchSeries(it)
+                                    currentDestination.hasRoute<Actors>() -> viewModel.searchPersons(it)
+                                }
+                                isSearching = false
+                            },
+                            active = isSearching,
+                            onActiveChange = { isSearching = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                        )
+                    }
+                },
                     bottomBar = {
                         if (currentDestination?.hasRoute<Profile>() == false) {
                             NavigationBar {
@@ -154,7 +169,11 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<Film> { backStackEntry ->
                             val filmDetail: Film = backStackEntry.toRoute()
-                            FilmFun(viewModel, filmDetail.id)
+                            FilmFun(navController, viewModel, filmDetail.id)
+                        }
+                        composable<Serie> { backStackEntry ->
+                            val serieDetail: Serie = backStackEntry.toRoute()
+                            SerieFun(navController, viewModel, serieDetail.id)
                         }
                     }
                 }

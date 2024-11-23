@@ -33,7 +33,7 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel) {
     val movies by viewModel.movies.collectAsState()
     var movieId: Int
 
-   LaunchedEffect(true) {
+    LaunchedEffect(true) {
         viewModel.trendingFilms()
     }
 
@@ -42,7 +42,9 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .padding(top = 120.dp, start = 20.dp, end = 20.dp)
             ) {
                 items(movies) { movie ->
                     Column {
@@ -54,7 +56,7 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel) {
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp
                             ), modifier = Modifier
-                                .size(width = 200.dp, height = 424.dp)
+                                .size(width = 200.dp, height = 325.dp)
 
                         ) {
                             AsyncImage(
@@ -63,13 +65,13 @@ fun FilmsFun(navController: NavHostController, viewModel: MainViewModel) {
                             )
                             Text(
                                 modifier = Modifier
-                                    .padding(16.dp),
+                                    .padding(6.dp),
                                 textAlign = TextAlign.Center,
                                 text = movie.original_title
                             )
                             Text(
                                 modifier = Modifier
-                                    .padding(16.dp),
+                                    .padding(2.dp),
                                 textAlign = TextAlign.Center,
                                 text = movie.release_date
                             )

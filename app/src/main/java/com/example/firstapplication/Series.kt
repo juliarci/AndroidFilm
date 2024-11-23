@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 @Composable
 fun SeriesFun(navController: NavHostController, viewModel: MainViewModel){
     val series by viewModel.series.collectAsState()
+    var serieId: Int
 
     LaunchedEffect(true) {
         viewModel.trendingSeries()
@@ -40,15 +41,21 @@ fun SeriesFun(navController: NavHostController, viewModel: MainViewModel){
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .padding(top = 120.dp, start = 20.dp, end = 20.dp)
             ) {
                 items(series) { serie ->
                     Column {
                         ElevatedCard(
+                            onClick = {
+                                serieId = serie.id
+                                navController.navigate(Serie(serieId.toString()))
+                            },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation = 6.dp
                             ),modifier = Modifier
-                                .size(width = 200.dp, height = 424.dp)
+                                .size(width = 200.dp, height = 325.dp)
                         ) {
                             AsyncImage(
                                 model = "https://image.tmdb.org/t/p/w780/" + serie.poster_path,
@@ -56,13 +63,13 @@ fun SeriesFun(navController: NavHostController, viewModel: MainViewModel){
                             )
                             Text(
                                 modifier = Modifier
-                                    .padding(16.dp),
+                                    .padding(6.dp),
                                 textAlign = TextAlign.Center,
                                 text = serie.original_name
                             )
                             Text(
                                 modifier = Modifier
-                                    .padding(16.dp),
+                                    .padding(2.dp),
                                 textAlign = TextAlign.Center,
                                 text = serie.first_air_date
                             )
