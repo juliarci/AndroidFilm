@@ -23,13 +23,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.firstapplication.ui.utils.ActorCard
 import com.example.firstapplication.ui.utils.Poster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FilmFun(navController: NavHostController, viewModel: MainViewModel, id: String) {
+fun FilmFun(
+    navController: NavHostController,
+    viewModel: MainViewModel,
+    id: String,
+    classes: WindowSizeClass
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -44,54 +51,129 @@ fun FilmFun(navController: NavHostController, viewModel: MainViewModel, id: Stri
                 }
             )
         },
-        content = {
+        content = { padding ->
             val filmDetail by viewModel.filmDetail.collectAsState()
 
             viewModel.filmDetail(id)
 
             filmDetail?.let { film ->
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
-                ) {
-                    // Components
-                    item(span = { GridItemSpan(3) }) { FilmTitle(film.title) }
-                    item(span = { GridItemSpan(3) }) { Poster(film.poster_path) }
-                    item(span = { GridItemSpan(3) }) { FilmDescription(film.overview) }
-                    item(span = { GridItemSpan(3) }) { FilmGenres(film.genres) }
-                    item(span = { GridItemSpan(3) }) {
-                        FilmInfoRow(
-                            "Sorti le:",
-                            film.release_date,
-                            "Durée:",
-                            "${film.runtime} min"
-                        )
+                if (classes.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                    // Mode portrait
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3), // 3 colonnes pour informations du film
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
+                    ) {
+                        // Titre du film
+                        item(span = { GridItemSpan(3) }) {
+                            FilmTitle(film.title)
+                        }
+
+                        item(span = { GridItemSpan(3) }) {
+                            Poster(film.poster_path)
+                        }
+
+                        item(span = { GridItemSpan(3) }) {
+                            FilmDescription(film.overview)
+                        }
+
+                        item(span = { GridItemSpan(3) }) {
+                            FilmGenres(film.genres)
+                        }
+
+                        item(span = { GridItemSpan(3) }) {
+                            FilmInfoRow(
+                                "Sorti le:",
+                                film.release_date,
+                                "Durée:",
+                                "${film.runtime} min"
+                            )
+                        }
+
+                        item(span = { GridItemSpan(3) }) {
+                            FilmInfoRow(
+                                "Budget:",
+                                formatCurrency(film.budget),
+                                "Recettes:",
+                                formatCurrency(film.revenue)
+                            )
+                        }
+
+                        item(span = { GridItemSpan(3) }) {
+                            FilmRating(film.vote_average, film.vote_count)
+                        }
+
+                        item(span = { GridItemSpan(3) }) {
+                            Text(
+                                text = "Acteurs",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+
+                        // Mode portrait : 1 colonne pour les acteurs
+                        items(film.credits.cast) { castMember ->
+                            ActorCard(castMember)
+                        }
                     }
-                    item(span = { GridItemSpan(3) }) {
-                        FilmInfoRow(
-                            "Budget:",
-                            formatCurrency(film.budget),
-                            "Recettes:",
-                            formatCurrency(film.revenue)
-                        )
-                    }
-                    item(span = { GridItemSpan(3) }) {
-                        FilmRating(
-                            film.vote_average,
-                            film.vote_count
-                        )
-                    }
-                    item(span = { GridItemSpan(3) }) {
-                        Text(
-                            text = "Acteurs",
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-                    items(film.credits.cast) { castMember ->
-                        ActorCard(castMember)
+                } else {
+                    // Mode paysage
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(4), // 3 colonnes pour les informations du film
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
+                    ) {
+                        // Titre du film
+                        item(span = { GridItemSpan(4) }) {
+                            FilmTitle(film.title)
+                        }
+
+                        // Poster en mode paysage plus petit à gauche, informations à droite
+                        item(span = { GridItemSpan(1) }) {
+                            Poster(film.poster_path, isLandscape = true)
+                        }
+                        item(span = { GridItemSpan(3) }) {
+                            Column(modifier = Modifier.padding(start = 26.dp, top = 8.dp, end = 16.dp)) {
+                                FilmDescription(film.overview)
+
+                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre la description et les autres informations
+                                FilmGenres(film.genres)
+
+                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les genres et les informations suivantes
+                                FilmInfoRow(
+                                    "Sorti le:",
+                                    film.release_date,
+                                    "Durée:",
+                                    "${film.runtime} min"
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les informations de date et de durée
+                                FilmInfoRow(
+                                    "Budget:",
+                                    formatCurrency(film.budget),
+                                    "Recettes:",
+                                    formatCurrency(film.revenue)
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les informations financières
+                                FilmRating(film.vote_average, film.vote_count)
+                            }
+                        }
+
+                        // Informations sur les acteurs
+                        item(span = { GridItemSpan(4) }) {
+                            Text(
+                                text = "Acteurs",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+
+                        items(film.credits.cast) { castMember ->
+                            ActorCard(castMember)
+                        }
                     }
                 }
             }
@@ -116,7 +198,7 @@ fun FilmDescription(description: String) {
     Text(
         text = description,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(bottom = 16.dp, top = 6.dp),
+        modifier = Modifier.padding(bottom = 16.dp, top = 20.dp),
         textAlign = TextAlign.Justify
     )
 }

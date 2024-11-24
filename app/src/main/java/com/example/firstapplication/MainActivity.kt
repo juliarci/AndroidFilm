@@ -169,11 +169,11 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<Film> { backStackEntry ->
                             val filmDetail: Film = backStackEntry.toRoute()
-                            FilmFun(navController, viewModel, filmDetail.id)
+                            FilmFun(navController, viewModel, filmDetail.id, windowSizeClass)
                         }
                         composable<Serie> { backStackEntry ->
                             val serieDetail: Serie = backStackEntry.toRoute()
-                            SerieFun(navController, viewModel, serieDetail.id)
+                            SerieFun(navController, viewModel, serieDetail.id, windowSizeClass)
                         }
                     }
                 }

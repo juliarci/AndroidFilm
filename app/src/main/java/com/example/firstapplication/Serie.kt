@@ -23,13 +23,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.firstapplication.ui.utils.ActorCard
 import com.example.firstapplication.ui.utils.Poster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: String) {
+fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: String, classes: WindowSizeClass) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -44,48 +46,108 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                 }
             )
         },
-        content = {
+        content = { padding ->
             val serieDetail by viewModel.serieDetail.collectAsState()
 
             viewModel.serieDetail(id)
 
             serieDetail?.let { serie ->
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
-                ) {
-                    // Components
-                    item(span = { GridItemSpan(3) }) { SerieTitle(serie.name) }
-                    item(span = { GridItemSpan(3) }) { Poster(serie.poster_path) }
-                    item(span = { GridItemSpan(3) }) { SerieDescription(serie.overview) }
-                    item(span = { GridItemSpan(3) }) { SerieGenres(serie.genres) }
-                    item(span = { GridItemSpan(3) }) {
-                        SerieInfoRow(
-                            "Sorti le:",
-                            serie.first_air_date,
-                            "Saisons:",
-                            serie.number_of_seasons.toString()
-                        )
+                if (classes.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
+                    // Mode portrait
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3), // 3 colonnes pour informations de la série
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
+                    ) {
+                        // Titre de la série
+                        item(span = { GridItemSpan(3) }) { SerieTitle(serie.name) }
+                        item(span = { GridItemSpan(3) }) { Poster(serie.poster_path) }
+                        item(span = { GridItemSpan(3) }) { SerieDescription(serie.overview) }
+                        item(span = { GridItemSpan(3) }) { SerieGenres(serie.genres) }
+                        item(span = { GridItemSpan(3) }) {
+                            SerieInfoRow(
+                                "Sorti le:",
+                                serie.first_air_date,
+                                "Saisons:",
+                                serie.number_of_seasons.toString()
+                            )
+                        }
+                        item(span = { GridItemSpan(3) }) {
+                            SerieInfoRow(
+                                "Épisodes:",
+                                serie.number_of_episodes.toString(),
+                                "Note:",
+                                "${serie.vote_average} (${serie.vote_count} votes)",
+                            )
+                        }
+
+                        // Liste des acteurs
+                        item(span = { GridItemSpan(3) }) {
+                            Text(
+                                text = "Acteurs",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+
+                        items(serie.credits.cast) { castMember ->
+                            ActorCard(castMember)
+                        }
                     }
-                    item(span = { GridItemSpan(3) }) {
-                        SerieInfoRow(
-                            "Épisodes:",
-                            serie.number_of_episodes.toString(),
-                            "Note:",
-                            "${serie.vote_average} (${serie.vote_count} votes)",
-                        )
-                    }
-                    item(span = { GridItemSpan(3) }) {
-                        Text(
-                            text = "Acteurs",
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-                    items(serie.credits.cast) { castMember ->
-                        ActorCard(castMember)
+                } else {
+                    // Mode paysage
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(4), // 4 colonnes pour informations de la série
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
+                    ) {
+                        // Titre de la série
+                        item(span = { GridItemSpan(4) }) { SerieTitle(serie.name) }
+
+                        // Poster plus petit à gauche, informations à droite
+                        item(span = { GridItemSpan(1) }) {
+                            Poster(serie.poster_path, isLandscape = true)
+                        }
+                        item(span = { GridItemSpan(3) }) {
+                            Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)) {
+                                // Description
+                                SerieDescription(serie.overview)
+
+                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre la description et les autres informations
+                                SerieGenres(serie.genres)
+
+                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les genres et les informations suivantes
+                                SerieInfoRow(
+                                    "Sorti le:",
+                                    serie.first_air_date,
+                                    "Saisons:",
+                                    serie.number_of_seasons.toString()
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les informations de date et de saisons
+                                SerieInfoRow(
+                                    "Épisodes:",
+                                    serie.number_of_episodes.toString(),
+                                    "Note:",
+                                    "${serie.vote_average} (${serie.vote_count} votes)"
+                                )
+                            }
+                        }
+
+                        // Liste des acteurs
+                        item(span = { GridItemSpan(4) }) {
+                            Text(
+                                text = "Acteurs",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+
+                        items(serie.credits.cast) { castMember ->
+                            ActorCard(castMember)
+                        }
                     }
                 }
             }
@@ -110,7 +172,7 @@ fun SerieDescription(description: String) {
     Text(
         text = description,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(bottom = 16.dp, top = 6.dp),
+        modifier = Modifier.padding(bottom = 16.dp, top = 20.dp),
         textAlign = TextAlign.Justify
     )
 }

@@ -69,30 +69,32 @@ fun ActorCard(castMember: Cast, cornerRadius: Int = 8) {
         }
         Text(
             text = castMember.name,
-            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(bottom = 4.dp),
             textAlign = TextAlign.Center
         )
         Text(
             text = castMember.character,
-            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center
         )
     }
 }
 @Composable
-fun Poster(posterPath: String) {
+fun Poster(posterPath: String, isLandscape: Boolean = false) {
+    val width = if (isLandscape) 200.dp else 200.dp // Plus petit en paysage
+    val height = if (isLandscape) 300.dp else 450.dp // Plus petit en paysage
+
     RoundedImage(
         imageUrl = "https://image.tmdb.org/t/p/w780/$posterPath",
         cornerRadius = 16,
         aspectRatio = 3f / 4f,
         modifier = Modifier
-            .width(300.dp)
-            .height(450.dp)
+            .width(width)
+            .height(height)
             .padding(10.dp)
     )
 }
-
 @Composable
 fun LoadingIndicator() {
     CircularProgressIndicator(
