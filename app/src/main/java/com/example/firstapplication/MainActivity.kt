@@ -162,7 +162,7 @@ class MainActivity : ComponentActivity() {
                             FilmsFun(navController, viewModel, windowSizeClass)
                         }
                         composable<Actors> {
-                            ActorsFun(navController, viewModel, windowSizeClass)
+                            ActorsFun(viewModel, windowSizeClass)
                         }
                         composable<Series> {
                             SeriesFun(navController, viewModel, windowSizeClass)

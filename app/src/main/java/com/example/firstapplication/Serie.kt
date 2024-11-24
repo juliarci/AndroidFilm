@@ -46,21 +46,19 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                 }
             )
         },
-        content = { padding ->
+        content = {
             val serieDetail by viewModel.serieDetail.collectAsState()
 
             viewModel.serieDetail(id)
 
             serieDetail?.let { serie ->
                 if (classes.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
-                    // Mode portrait
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(3), // 3 colonnes pour informations de la série
+                        columns = GridCells.Fixed(3),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
                     ) {
-                        // Titre de la série
                         item(span = { GridItemSpan(3) }) { SerieTitle(serie.name) }
                         item(span = { GridItemSpan(3) }) { Poster(serie.poster_path) }
                         item(span = { GridItemSpan(3) }) { SerieDescription(serie.overview) }
@@ -82,7 +80,6 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                             )
                         }
 
-                        // Liste des acteurs
                         item(span = { GridItemSpan(3) }) {
                             Text(
                                 text = "Acteurs",
@@ -96,29 +93,25 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                         }
                     }
                 } else {
-                    // Mode paysage
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(4), // 4 colonnes pour informations de la série
+                        columns = GridCells.Fixed(4),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
                     ) {
-                        // Titre de la série
                         item(span = { GridItemSpan(4) }) { SerieTitle(serie.name) }
 
-                        // Poster plus petit à gauche, informations à droite
                         item(span = { GridItemSpan(1) }) {
                             Poster(serie.poster_path, isLandscape = true)
                         }
                         item(span = { GridItemSpan(3) }) {
                             Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)) {
-                                // Description
                                 SerieDescription(serie.overview)
 
-                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre la description et les autres informations
+                                Spacer(modifier = Modifier.height(8.dp))
                                 SerieGenres(serie.genres)
 
-                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les genres et les informations suivantes
+                                Spacer(modifier = Modifier.height(8.dp))
                                 SerieInfoRow(
                                     "Sorti le:",
                                     serie.first_air_date,
@@ -126,7 +119,7 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                                     serie.number_of_seasons.toString()
                                 )
 
-                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les informations de date et de saisons
+                                Spacer(modifier = Modifier.height(8.dp))
                                 SerieInfoRow(
                                     "Épisodes:",
                                     serie.number_of_episodes.toString(),
@@ -136,7 +129,6 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                             }
                         }
 
-                        // Liste des acteurs
                         item(span = { GridItemSpan(4) }) {
                             Text(
                                 text = "Acteurs",

@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -34,12 +35,11 @@ fun FilmsFun(
 
     val classWidth = classes.windowWidthSizeClass
 
-    // Choix de la mise en page selon la taille de l'écran
     when (classWidth) {
         WindowWidthSizeClass.COMPACT -> {
             FilmsFunCompact(navController, movies, isLoading, errorMessage)
         }
-        else -> {  // Mode Large ou Expanded
+        else -> {
             FilmsFunExpanded(navController, movies, isLoading, errorMessage)
         }
     }
@@ -122,8 +122,9 @@ fun MovieCard(
         Text(
             modifier = Modifier.padding(6.dp),
             textAlign = TextAlign.Center,
-            text = movie.original_title
-        )
+            text = movie.original_title,
+            fontWeight = FontWeight.Bold,
+            )
         Text(
             modifier = Modifier.padding(2.dp),
             textAlign = TextAlign.Center,

@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -125,8 +126,9 @@ fun SerieCard(
         Text(
             modifier = Modifier.padding(6.dp),
             textAlign = TextAlign.Center,
-            text = serie.original_name
-        )
+            text = serie.original_name,
+            fontWeight = FontWeight.Bold,
+            )
         Text(
             modifier = Modifier.padding(2.dp),
             textAlign = TextAlign.Center,

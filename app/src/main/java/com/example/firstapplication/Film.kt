@@ -51,21 +51,19 @@ fun FilmFun(
                 }
             )
         },
-        content = { padding ->
+        content = {
             val filmDetail by viewModel.filmDetail.collectAsState()
 
             viewModel.filmDetail(id)
 
             filmDetail?.let { film ->
                 if (classes.windowWidthSizeClass == WindowWidthSizeClass.COMPACT) {
-                    // Mode portrait
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(3), // 3 colonnes pour informations du film
+                        columns = GridCells.Fixed(3),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
                     ) {
-                        // Titre du film
                         item(span = { GridItemSpan(3) }) {
                             FilmTitle(film.title)
                         }
@@ -112,25 +110,21 @@ fun FilmFun(
                             )
                         }
 
-                        // Mode portrait : 1 colonne pour les acteurs
                         items(film.credits.cast) { castMember ->
                             ActorCard(castMember)
                         }
                     }
                 } else {
-                    // Mode paysage
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(4), // 3 colonnes pour les informations du film
+                        columns = GridCells.Fixed(4),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
                     ) {
-                        // Titre du film
                         item(span = { GridItemSpan(4) }) {
                             FilmTitle(film.title)
                         }
 
-                        // Poster en mode paysage plus petit à gauche, informations à droite
                         item(span = { GridItemSpan(1) }) {
                             Poster(film.poster_path, isLandscape = true)
                         }
@@ -138,10 +132,10 @@ fun FilmFun(
                             Column(modifier = Modifier.padding(start = 26.dp, top = 8.dp, end = 16.dp)) {
                                 FilmDescription(film.overview)
 
-                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre la description et les autres informations
+                                Spacer(modifier = Modifier.height(8.dp))
                                 FilmGenres(film.genres)
 
-                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les genres et les informations suivantes
+                                Spacer(modifier = Modifier.height(8.dp))
                                 FilmInfoRow(
                                     "Sorti le:",
                                     film.release_date,
@@ -149,7 +143,7 @@ fun FilmFun(
                                     "${film.runtime} min"
                                 )
 
-                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les informations de date et de durée
+                                Spacer(modifier = Modifier.height(8.dp))
                                 FilmInfoRow(
                                     "Budget:",
                                     formatCurrency(film.budget),
@@ -157,12 +151,11 @@ fun FilmFun(
                                     formatCurrency(film.revenue)
                                 )
 
-                                Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les informations financières
+                                Spacer(modifier = Modifier.height(8.dp))
                                 FilmRating(film.vote_average, film.vote_count)
                             }
                         }
 
-                        // Informations sur les acteurs
                         item(span = { GridItemSpan(4) }) {
                             Text(
                                 text = "Acteurs",
