@@ -1,9 +1,8 @@
 package com.example.firstapplication
 
-import Cast
+import Genre
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -20,22 +19,21 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import com.example.firstapplication.ui.utils.ActorCard
+import com.example.firstapplication.ui.utils.Poster
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Détails de la série") },
+                title = { Text("Détails de la Série") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate(Series()) }) {
                         Icon(
@@ -51,112 +49,43 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
 
             viewModel.serieDetail(id)
 
-            serieDetail?.let {
+            serieDetail?.let { serie ->
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(3), // Trois colonnes pour les acteurs et autres éléments
+                    columns = GridCells.Fixed(3),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
                 ) {
-                    item {
-
-                    }
-                    // Titre du film (occupera toute la largeur)
+                    // Components
+                    item(span = { GridItemSpan(3) }) { SerieTitle(serie.name) }
+                    item(span = { GridItemSpan(3) }) { Poster(serie.poster_path) }
+                    item(span = { GridItemSpan(3) }) { SerieDescription(serie.overview) }
+                    item(span = { GridItemSpan(3) }) { SerieGenres(serie.genres) }
                     item(span = { GridItemSpan(3) }) {
-                        Text(
-                            text = it.name,
-                            style = MaterialTheme.typography.displayLarge,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                            textAlign = TextAlign.Center
+                        SerieInfoRow(
+                            "Sorti le:",
+                            serie.first_air_date,
+                            "Saisons:",
+                            serie.number_of_seasons.toString()
                         )
                     }
-
-                    // Affiche du film (occupera toute la largeur et bords arrondis)
                     item(span = { GridItemSpan(3) }) {
-                        AsyncImage(
-                            model = "https://image.tmdb.org/t/p/w780/" + it.poster_path,
-                            contentDescription = "Affiche du film",
-                            modifier = Modifier
-                                .fillMaxWidth() // Pour que l'image prenne toute la largeur de l'écran
-                                .clip(RoundedCornerShape(16.dp)) // Coins arrondis avec un rayon de 16.dp
-                                .padding(bottom = 16.dp) // Ajout d'une marge en bas
+                        SerieInfoRow(
+                            "Épisodes:",
+                            serie.number_of_episodes.toString(),
+                            "Note:",
+                            "${serie.vote_average} (${serie.vote_count} votes)",
                         )
                     }
-
-                    // Description du film (occupera toute la largeur)
                     item(span = { GridItemSpan(3) }) {
-                        Text(
-                            text = it.overview,
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(bottom = 16.dp)
-                        )
-                    }
-
-                    // Genres du film (occupant une colonne)
-                    item {
-                        Text(
-                            text = "Genres: ${it.genres.joinToString { genre -> genre.name }}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-
-                    // Informations sur le film (date de sortie et durée) dans une seule ligne
-                    item(span = { GridItemSpan(3) }) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "Sorti le: ${it.first_air_date}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
-                                text = "Nombre de saisons : ${it.number_of_seasons} min",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-
-                    // Budget et recettes du film dans une seule ligne
-                    item(span = { GridItemSpan(3) }) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-
-                            Text(
-                                text = "Nombre d'épisodes: ${formatCurrencySerie(it.number_of_episodes)}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-
-                    // Note du film dans une seule ligne
-                    item(span = { GridItemSpan(3) }) {
-                        Text(
-                            text = "Note: ${it.vote_average} (${it.vote_count} votes)",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-
-                    // Section "Acteurs" (occupant toute la largeur)
-                    item(span = { GridItemSpan(3) }) {
-                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Acteurs",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
-
-                    // Affichage des acteurs dans une grille de 3 colonnes
-                    it.credits.cast.let { castList ->
-                        items(castList) { castMember ->
-                            ActorCardSerie(castMember)
-                        }
+                    items(serie.credits.cast) { castMember ->
+                        ActorCard(castMember)
                     }
                 }
             }
@@ -165,41 +94,43 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
 }
 
 @Composable
-fun ActorCardSerie(castMember: Cast) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+fun SerieTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.displayLarge,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp) // Padding autour de chaque acteur
-    ) {
-        AsyncImage(
-            model = "https://image.tmdb.org/t/p/w185/${castMember.profile_path}",
-            contentDescription = "Portrait de ${castMember.name}",
-            modifier = Modifier
-                .fillMaxWidth() // Largeur uniforme pour tous les portraits
-                .height(180.dp) // Hauteur uniforme pour tous les acteurs
-                .clip(RoundedCornerShape(50.dp)) // Coins arrondis
-                .padding(bottom = 8.dp)
-        )
-
-        Text(
-            text = castMember.name,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
-            textAlign = TextAlign.Center
-        )
-
-        if (castMember.character.isNotEmpty()) {
-            Text(
-                text = castMember.character,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
+            .padding(bottom = 8.dp),
+        textAlign = TextAlign.Center
+    )
 }
 
-@SuppressLint("DefaultLocale")
-fun formatCurrencySerie(amount: Int): String {
-    return "$${String.format("%,d", amount)}"
+@Composable
+fun SerieDescription(description: String) {
+    Text(
+        text = description,
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.padding(bottom = 16.dp, top = 6.dp),
+        textAlign = TextAlign.Justify
+    )
+}
+
+@Composable
+fun SerieGenres(genres: List<Genre>) {
+    Text(
+        text = "Genres: ${genres.joinToString { it.name }}",
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+}
+
+@Composable
+fun SerieInfoRow(label1: String, value1: String, label2: String, value2: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = "$label1 $value1", style = MaterialTheme.typography.bodyMedium)
+        Text(text = "$label2 $value2", style = MaterialTheme.typography.bodyMedium)
+    }
 }

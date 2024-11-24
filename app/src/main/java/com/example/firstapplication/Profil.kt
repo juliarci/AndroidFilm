@@ -47,7 +47,6 @@ fun Profil(
                 ProfileContent(navController)
             }
         }
-
         else -> {
             Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
                 ProfileContentCompact(navController)
@@ -176,7 +175,7 @@ fun StartButton(navController: NavHostController) {
     Button(
         onClick = { navController.navigate(Films()) },
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFE333FF)
+            containerColor = Color(0xFF6D7387)
         )
     ) {
         Text("Démarrer")

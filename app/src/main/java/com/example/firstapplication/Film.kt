@@ -1,11 +1,8 @@
 package com.example.firstapplication
 
-import Cast
 import Genre
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,17 +19,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
+import com.example.firstapplication.ui.utils.ActorCard
+import com.example.firstapplication.ui.utils.Poster
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -66,7 +58,7 @@ fun FilmFun(navController: NavHostController, viewModel: MainViewModel, id: Stri
                 ) {
                     // Components
                     item(span = { GridItemSpan(3) }) { FilmTitle(film.title) }
-                    item(span = { GridItemSpan(3) }) { FilmPoster(film.poster_path) }
+                    item(span = { GridItemSpan(3) }) { Poster(film.poster_path) }
                     item(span = { GridItemSpan(3) }) { FilmDescription(film.overview) }
                     item(span = { GridItemSpan(3) }) { FilmGenres(film.genres) }
                     item(span = { GridItemSpan(3) }) {
@@ -94,7 +86,7 @@ fun FilmFun(navController: NavHostController, viewModel: MainViewModel, id: Stri
                     item(span = { GridItemSpan(3) }) {
                         Text(
                             text = "Acteurs",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
@@ -120,23 +112,12 @@ fun FilmTitle(title: String) {
 }
 
 @Composable
-fun FilmPoster(posterPath: String) {
-    AsyncImage(
-        model = "https://image.tmdb.org/t/p/w780/$posterPath",
-        contentDescription = "Affiche du film",
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .padding(bottom = 16.dp)
-    )
-}
-
-@Composable
 fun FilmDescription(description: String) {
     Text(
         text = description,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(bottom = 16.dp)
+        modifier = Modifier.padding(bottom = 16.dp, top = 6.dp),
+        textAlign = TextAlign.Justify
     )
 }
 
@@ -164,58 +145,9 @@ fun FilmInfoRow(label1: String, value1: String, label2: String, value2: String) 
 fun FilmRating(voteAverage: Double, voteCount: Int) {
     Text(
         text = "Note: $voteAverage ($voteCount votes)",
-        style = MaterialTheme.typography.bodyMedium
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.padding(bottom = 16.dp)
     )
-}
-
-@Composable
-fun ActorCard(castMember: Cast) {
-
-    val profilePath = castMember.profile_path.takeIf { it.isNotEmpty() }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        if (profilePath != null) {
-            if (profilePath.isNotEmpty()) {
-                Image(
-                    painter = rememberAsyncImagePainter("https://image.tmdb.org/t/p/w185/$profilePath"),
-                    contentDescription = "Portrait de ${castMember.name}",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .padding(bottom = 8.dp)
-                )
-            } else {
-                Image(
-                    painter = painterResource(R.drawable.profile),
-                    contentDescription = "Portrait par défaut",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .padding(bottom = 8.dp)
-                )
-            }
-        }
-
-        Text(
-            text = castMember.name ,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
-            textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = castMember.character,
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center
-        )
-    }
 }
 
 @SuppressLint("DefaultLocale")

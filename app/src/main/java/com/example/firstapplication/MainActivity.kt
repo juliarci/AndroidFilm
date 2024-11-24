@@ -159,13 +159,13 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<Films> {
-                            FilmsFun(navController, viewModel)
+                            FilmsFun(navController, viewModel, windowSizeClass)
                         }
                         composable<Actors> {
-                            ActorsFun(navController, viewModel)
+                            ActorsFun(navController, viewModel, windowSizeClass)
                         }
                         composable<Series> {
-                            SeriesFun(navController, viewModel)
+                            SeriesFun(navController, viewModel, windowSizeClass)
                         }
                         composable<Film> { backStackEntry ->
                             val filmDetail: Film = backStackEntry.toRoute()
