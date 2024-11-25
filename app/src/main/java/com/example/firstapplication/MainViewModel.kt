@@ -7,13 +7,14 @@ import SerieDetail
 import TvShow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
 
     //API Request parameters
     val movies = MutableStateFlow<List<Movie>>(listOf())
@@ -26,16 +27,9 @@ class MainViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    private val apiKey = "ca096d89c07f759c710e701ad181fd06"
-    private val service = Retrofit.Builder().baseUrl("https://api.themoviedb.org/3/")
-        .addConverterFactory(MoshiConverterFactory.create())
-        .build()
-        .create(TmdbAPI::class.java)
-
-
     fun searchMovies(keyWord: String) {
         viewModelScope.launch {
-            movies.value = service.getFilmsByKeyWord(apiKey, keyWord).results
+            movies.value = repo.searchMovies(keyWord)
         }
     }
 
@@ -44,7 +38,7 @@ class MainViewModel : ViewModel() {
             _errorMessage.value = null
             _isLoading.value = true
             try {
-                val films = service.getTrendingFilms(apiKey).results
+                val films = repo.trendingFilms()
                 if (films.isNotEmpty()) {
                     movies.value = films
                 } else {
@@ -57,19 +51,19 @@ class MainViewModel : ViewModel() {
             }
         }
         viewModelScope.launch {
-            movies.value = service.getTrendingFilms(apiKey).results
+            movies.value = repo.trendingFilms()
         }
     }
 
     fun filmDetail(id: String) {
         viewModelScope.launch {
-            filmDetail.value = service.getDetailFilm(apiKey = apiKey, filmId = id)
+            filmDetail.value = repo.filmDetail(id)
         }
     }
 
     fun searchSeries(keyWord: String) {
         viewModelScope.launch {
-            series.value = service.getSeriesByKeyWord(apiKey, keyWord).results
+            series.value = repo.searchSeries(keyWord)
         }
     }
 
@@ -78,7 +72,7 @@ class MainViewModel : ViewModel() {
             _isLoading.value = true
             _errorMessage.value = null
             try {
-                val getSeries = service.getTrendingSeries(apiKey).results
+                val getSeries = repo.trendingSeries()
 
                 if (getSeries.isEmpty()) {
                     _errorMessage.value = "Aucune série trouvée."
@@ -95,19 +89,19 @@ class MainViewModel : ViewModel() {
 
     fun serieDetail(id: String) {
         viewModelScope.launch {
-            serieDetail.value = service.getDetailSerie(apiKey = apiKey, serieId = id)
+            serieDetail.value = repo.serieDetail(id)
         }
     }
 
     fun searchPersons(keyWord: String) {
         viewModelScope.launch {
-            persons.value = service.getPersonByKeyWord(apiKey, keyWord).results
+            persons.value = repo.searchPersons(keyWord)
         }
     }
 
     fun trendingPersons() {
         viewModelScope.launch {
-            persons.value = service.getTrendingPersons(apiKey).results
+            persons.value = repo.trendingPersons()
         }
     }
 }

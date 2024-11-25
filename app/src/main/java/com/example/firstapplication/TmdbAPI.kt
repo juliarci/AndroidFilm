@@ -10,6 +10,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbAPI {
+
     @GET("trending/movie/week")
     suspend fun getTrendingFilms(
         @Query("api_key") apiKey: String

@@ -1,10 +1,10 @@
 [versions]
 agp = "8.7.2"
-coilCompose = "2.7.0"
-coilComposeVersion = "2.1.0"
 coilKtCoilCompose = "2.4.0"
 converterMoshi = "2.9.0"
-kotlin = "1.9.0"
+hiltAndroid = "2.52"
+hiltNavigationCompose = "1.2.0"
+kotlin = "1.9.21"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -14,18 +14,16 @@ lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 adaptiveAndroid = "1.0.0"
-navigationCompose = "2.8.0"
 navigationComposeVersion = "2.8.1"
-material3Jvmstubs = "1.4.0-alpha04"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose-v281 = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
-coil = { module = "io.coil-kt:coil", version.ref = "coilCompose" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-coil-compose-v210 = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 coil-compose-v240 = { module = "io.coil-kt:coil-compose", version.ref = "coilKtCoilCompose" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -42,7 +40,6 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterMoshi" }
-androidx-material3-jvmstubs = { group = "androidx.compose.material3", name = "material3-jvmstubs", version.ref = "material3Jvmstubs" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

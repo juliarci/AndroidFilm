@@ -81,7 +81,7 @@ fun ActorCard(
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        modifier = Modifier.size(width = 200.dp, height = 324.dp)
+        modifier = Modifier.size(width = 200.dp, height = 345.dp)
     ) {
         AsyncImage(
             model = "https://image.tmdb.org/t/p/w780/${actor.profile_path}",

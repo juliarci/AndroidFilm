@@ -2,12 +2,18 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     kotlin("plugin.serialization") version "1.9.25"
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+    //id("androidx.room")
+
 }
 
 android {
     namespace = "com.example.firstapplication"
     compileSdk = 34
-
+//    room {
+//        schemaDirectory("$projectDir/schemas")
+//    }
     defaultConfig {
         applicationId = "com.example.firstapplication"
         minSdk = 24
@@ -41,13 +47,14 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
@@ -73,4 +80,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    //implementation(libs.androidx.room.runtime)
+    //implementation(libs.androidx.room.compiler)
 }
