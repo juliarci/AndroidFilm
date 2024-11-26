@@ -1,10 +1,10 @@
 package com.example.firstapplication
 
-import FilmDetail
-import PersonResponse
-import SerieDetail
-import TmdbResult
-import TvShowsResponse
+import com.example.firstapplication.model.FilmDetail
+import com.example.firstapplication.model.PersonResponse
+import com.example.firstapplication.model.SerieDetail
+import com.example.firstapplication.model.TmdbResult
+import com.example.firstapplication.model.TvShowsResponse
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import retrofit2.http.Path

@@ -1,6 +1,5 @@
 package com.example.firstapplication
 
-import Genre
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.firstapplication.model.Genre
 import com.example.firstapplication.ui.utils.ActorCard
 import com.example.firstapplication.ui.utils.Poster
 

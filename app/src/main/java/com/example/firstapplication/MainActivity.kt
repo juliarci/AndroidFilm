@@ -72,7 +72,8 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val backStack by navController.currentBackStackEntryAsState()
             val currentDestination = backStack?.destination
-            FirstApplicationTheme {Scaffold(
+            FirstApplicationTheme {
+                Scaffold(
                 topBar = {
                     if (currentDestination?.hasRoute<Profile>() == false && !currentDestination.hasRoute<Film>()  && !currentDestination.hasRoute<Serie>()) {
                         SearchBar(

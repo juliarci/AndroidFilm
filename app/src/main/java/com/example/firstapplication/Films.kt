@@ -1,10 +1,12 @@
 package com.example.firstapplication
 
-import Movie
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,8 +18,11 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.firstapplication.daos.FilmDao
+import com.example.firstapplication.model.Movie
 import com.example.firstapplication.ui.utils.ErrorMessage
 import com.example.firstapplication.ui.utils.LoadingIndicator
+import kotlinx.coroutines.launch
 
 @Composable
 fun FilmsFun(
@@ -37,10 +42,10 @@ fun FilmsFun(
 
     when (classWidth) {
         WindowWidthSizeClass.COMPACT -> {
-            FilmsFunCompact(navController, movies, isLoading, errorMessage)
+            FilmsFunCompact(navController, movies, isLoading, errorMessage, viewModel)
         }
         else -> {
-            FilmsFunExpanded(navController, movies, isLoading, errorMessage)
+            FilmsFunExpanded(navController, movies, isLoading, errorMessage, viewModel)
         }
     }
 }
@@ -50,7 +55,8 @@ fun FilmsFunCompact(
     navController: NavHostController,
     movies: List<Movie>,
     isLoading: Boolean,
-    errorMessage: String?
+    errorMessage: String?,
+    viewModel: MainViewModel
 ) {
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -59,7 +65,7 @@ fun FilmsFunCompact(
             } else if (errorMessage != null) {
                 ErrorMessage(errorMessage)
             } else {
-                MovieGrid(navController, movies, columns = 2)
+                MovieGrid(navController, movies, columns = 2, viewModel)
             }
         }
     }
@@ -70,7 +76,8 @@ fun FilmsFunExpanded(
     navController: NavHostController,
     movies: List<Movie>,
     isLoading: Boolean,
-    errorMessage: String?
+    errorMessage: String?,
+    viewModel: MainViewModel
 ) {
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -79,7 +86,7 @@ fun FilmsFunExpanded(
             } else if (errorMessage != null) {
                 ErrorMessage(errorMessage)
             } else {
-                MovieGrid(navController, movies, columns = 4)
+                MovieGrid(navController, movies, columns = 4, viewModel)
             }
         }
     }
@@ -89,7 +96,8 @@ fun FilmsFunExpanded(
 fun MovieGrid(
     navController: NavHostController,
     movies: List<Movie>,
-    columns: Int
+    columns: Int,
+    viewModel: MainViewModel
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
@@ -99,7 +107,7 @@ fun MovieGrid(
             .padding(top = 120.dp, start = 20.dp, end = 20.dp, bottom = 110.dp)
     ) {
         items(movies) { movie ->
-            MovieCard(navController, movie)
+            MovieCard(navController, movie, viewModel)
         }
     }
 }
@@ -107,8 +115,9 @@ fun MovieGrid(
 @Composable
 fun MovieCard(
     navController: NavHostController,
-    movie: Movie
-) {
+    movie: Movie,
+    viewModel: MainViewModel) {
+    val scope = rememberCoroutineScope()
     ElevatedCard(
         onClick = { navController.navigate(Film(movie.id.toString())) },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
@@ -119,6 +128,22 @@ fun MovieCard(
             model = "https://image.tmdb.org/t/p/w780/${movie.poster_path}",
             contentDescription = "Image du film"
         )
+        IconButton(
+            onClick = {
+                scope.launch {
+                    viewModel.toggleFavorite(movie)
+                }
+            },
+            modifier = Modifier
+                .padding(8.dp)
+        )
+         {
+            Icon(
+                imageVector = if (movie.isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = if (movie.isFav) "Retirer des favoris" else "Ajouter aux favoris",
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
         Text(
             modifier = Modifier.padding(6.dp),
             textAlign = TextAlign.Center,

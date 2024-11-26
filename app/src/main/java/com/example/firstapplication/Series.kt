@@ -1,6 +1,5 @@
 package com.example.firstapplication
 
-import TvShow
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -17,6 +16,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.firstapplication.model.TvShow
 import com.example.firstapplication.ui.utils.ErrorMessage
 import com.example.firstapplication.ui.utils.LoadingIndicator
 

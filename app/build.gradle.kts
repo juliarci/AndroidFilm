@@ -4,16 +4,12 @@ plugins {
     kotlin("plugin.serialization") version "1.9.25"
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    //id("androidx.room")
-
+    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "com.example.firstapplication"
     compileSdk = 34
-//    room {
-//        schemaDirectory("$projectDir/schemas")
-//    }
     defaultConfig {
         applicationId = "com.example.firstapplication"
         minSdk = 24
@@ -52,6 +48,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/gradle/incremental.annotation.processors"
         }
     }
 
@@ -59,6 +56,7 @@ android {
 
 dependencies {
 
+    // AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -68,11 +66,20 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.adaptive.android)
+
+    // Room
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
+    kapt("androidx.room:room-compiler:2.5.0")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Coil and Retrofit
     implementation(libs.coil.compose.v240)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -80,9 +87,21 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
+
+    // Hilt and ViewModel
     implementation(libs.dagger.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    //implementation(libs.androidx.room.runtime)
-    //implementation(libs.androidx.room.compiler)
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+    kapt(libs.androidx.hilt.compiler)
+    kapt(libs.kotlinx.metadata.jvm)
+}
+
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+    correctErrorTypes = true
+    useBuildCache = true
+    generateStubs = true
 }

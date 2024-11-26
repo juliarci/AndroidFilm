@@ -1,12 +1,12 @@
 package com.example.firstapplication
 
-import FilmDetail
-import Movie
-import Person
-import SerieDetail
-import TvShow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.firstapplication.model.FilmDetail
+import com.example.firstapplication.model.Movie
+import com.example.firstapplication.model.Person
+import com.example.firstapplication.model.SerieDetail
+import com.example.firstapplication.model.TvShow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,43 +29,81 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
 
     fun searchMovies(keyWord: String) {
         viewModelScope.launch {
-            movies.value = repo.searchMovies(keyWord)
+            _isLoading.value = true
+            _errorMessage.value = null
+            try {
+                val results = repo.searchMovies(keyWord)
+                if (results.isEmpty()) {
+                    _errorMessage.value = "Aucun film trouvé."
+                }
+                movies.value = results
+            } catch (e: Exception) {
+                _errorMessage.value = "Erreur lors de la recherche des films : ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun toggleFavorite(movie: Movie) {
+        viewModelScope.launch {
+            repo.toggleFavoriteStatus(movie)
+            trendingFilms()
         }
     }
 
     fun trendingFilms() {
         viewModelScope.launch {
-            _errorMessage.value = null
             _isLoading.value = true
+            _errorMessage.value = null
             try {
                 val films = repo.trendingFilms()
                 if (films.isNotEmpty()) {
                     movies.value = films
                 } else {
-                    _errorMessage.value = "Aucun film trouvé."
+                    _errorMessage.value = "Aucun film tendance trouvé."
                 }
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur de récupération des films : ${e.message}"
+                _errorMessage.value = "Erreur de récupération des films tendances : ${e.message}"
             } finally {
                 _isLoading.value = false
             }
-        }
-        viewModelScope.launch {
-            movies.value = repo.trendingFilms()
         }
     }
 
     fun filmDetail(id: String) {
         viewModelScope.launch {
-            filmDetail.value = repo.filmDetail(id)
+            _isLoading.value = true
+            _errorMessage.value = null
+            try {
+                filmDetail.value = repo.filmDetail(id)
+            } catch (e: Exception) {
+                _errorMessage.value = "Erreur lors de la récupération des détails du film : ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
+
     fun searchSeries(keyWord: String) {
         viewModelScope.launch {
-            series.value = repo.searchSeries(keyWord)
+            _isLoading.value = true
+            _errorMessage.value = null
+            try {
+                val results = repo.searchSeries(keyWord)
+                if (results.isEmpty()) {
+                    _errorMessage.value = "Aucune série trouvée."
+                }
+                series.value = results
+            } catch (e: Exception) {
+                _errorMessage.value = "Erreur lors de la recherche des séries : ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
+
 
     fun trendingSeries() {
         viewModelScope.launch {
@@ -73,14 +111,12 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
             _errorMessage.value = null
             try {
                 val getSeries = repo.trendingSeries()
-
                 if (getSeries.isEmpty()) {
-                    _errorMessage.value = "Aucune série trouvée."
-                } else {
-                    series.value = getSeries
+                    _errorMessage.value = "Aucune série tendance trouvée."
                 }
+                series.value = getSeries
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur de récupération des séries : ${e.message}"
+                _errorMessage.value = "Erreur de récupération des séries tendances : ${e.message}"
             } finally {
                 _isLoading.value = false
             }
@@ -95,13 +131,38 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
 
     fun searchPersons(keyWord: String) {
         viewModelScope.launch {
-            persons.value = repo.searchPersons(keyWord)
+            _isLoading.value = true
+            _errorMessage.value = null
+            try {
+                val results = repo.searchPersons(keyWord)
+                if (results.isEmpty()) {
+                    _errorMessage.value = "Aucune personne trouvée."
+                }
+                persons.value = results
+            } catch (e: Exception) {
+                _errorMessage.value = "Erreur lors de la recherche des personnes : ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
     fun trendingPersons() {
         viewModelScope.launch {
-            persons.value = repo.trendingPersons()
+            _isLoading.value = true
+            _errorMessage.value = null
+            try {
+                val results = repo.trendingPersons()
+                if (results.isEmpty()) {
+                    _errorMessage.value = "Aucune personne tendance trouvée."
+                }
+                persons.value = results
+            } catch (e: Exception) {
+                _errorMessage.value = "Erreur lors de la récupération des personnes tendances : ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
+
 }

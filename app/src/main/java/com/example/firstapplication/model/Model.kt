@@ -1,3 +1,5 @@
+package com.example.firstapplication.model
+
 data class TmdbResult(
     val page: Int,
     val results: List<Movie>,
@@ -20,7 +22,8 @@ data class Movie(
     val title: String,
     val video: Boolean,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    var isFav: Boolean = false
 )
 
 data class TvShowsResponse(
@@ -44,7 +47,8 @@ data class TvShow(
     val first_air_date: String,
     val name: String,
     val vote_average: Double,
-    val vote_count: Int
+    val vote_count: Int,
+    val isFav: Boolean = false
 )
 
 data class PersonResponse(
@@ -53,6 +57,7 @@ data class PersonResponse(
     val total_pages: Int,
     val total_results: Int
 )
+
 data class Person(
     val adult: Boolean,
     val gender: Int,
@@ -62,7 +67,8 @@ data class Person(
     val original_name: String,
     val popularity: Double,
     val profile_path: String?,
-    val known_for: List<KnownFor>
+    val known_for: List<KnownFor>,
+    val isFav: Boolean = false
 )
 
 data class KnownFor(

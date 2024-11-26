@@ -1,6 +1,5 @@
 package com.example.firstapplication.ui.utils
 
-import Cast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.firstapplication.R
+import com.example.firstapplication.model.Cast
 
 @Composable
 fun RoundedImage(
