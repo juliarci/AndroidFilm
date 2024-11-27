@@ -30,6 +30,13 @@ class Repository @Inject constructor(private val tmdbApi: TmdbAPI, private val f
         }
         return updatedResults
     }
+
+    suspend fun favoriteMovies(): List<Movie> {
+        val favoriteEntities = filmDao.getFavFilms()
+        return favoriteEntities.map { it.fiche.copy(isFav = true)
+        }
+    }
+
     suspend fun toggleFavoriteStatus(movie: Movie) {
         val isFavorite = filmDao.isFavorite(movie.id.toString())
 

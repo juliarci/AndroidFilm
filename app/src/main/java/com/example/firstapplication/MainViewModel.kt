@@ -26,6 +26,8 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     val isLoading: StateFlow<Boolean> = _isLoading
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
+    private val _favoritesOnly = MutableStateFlow(false)
+    val favoritesOnly: StateFlow<Boolean> = _favoritesOnly
 
     fun searchMovies(keyWord: String) {
         viewModelScope.launch {
@@ -68,6 +70,29 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    fun toggleFavoritesOnly() {
+        _favoritesOnly.value = !_favoritesOnly.value
+        if (_favoritesOnly.value) {
+            loadFavoriteMovies()
+        } else {
+            loadTrendingMovies()
+        }
+    }
+
+    private fun loadFavoriteMovies() {
+        viewModelScope.launch {
+            val favorites = repo.favoriteMovies()
+            movies.value = favorites
+        }
+    }
+
+    private fun loadTrendingMovies() {
+        viewModelScope.launch {
+            val trending = repo.trendingFilms()
+            movies.value = trending
         }
     }
 

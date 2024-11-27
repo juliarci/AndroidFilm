@@ -119,7 +119,7 @@ fun FilmFun(
                         columns = GridCells.Fixed(4),
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
+                            .padding(top = 80.dp, start = 100.dp, end = 16.dp)
                     ) {
                         item(span = { GridItemSpan(4) }) {
                             FilmTitle(film.title)
@@ -129,7 +129,7 @@ fun FilmFun(
                             Poster(film.poster_path, isLandscape = true)
                         }
                         item(span = { GridItemSpan(3) }) {
-                            Column(modifier = Modifier.padding(start = 26.dp, top = 8.dp, end = 16.dp)) {
+                            Column(modifier = Modifier.padding(start = 26.dp, top = 16.dp, end = 16.dp)) {
                                 FilmDescription(film.overview)
 
                                 Spacer(modifier = Modifier.height(8.dp))

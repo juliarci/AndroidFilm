@@ -86,7 +86,7 @@ fun FilmsFunExpanded(
             } else if (errorMessage != null) {
                 ErrorMessage(errorMessage)
             } else {
-                MovieGrid(navController, movies, columns = 4, viewModel)
+                MovieGridExpanded(navController, movies, columns = 4, viewModel)
             }
         }
     }
@@ -113,6 +113,26 @@ fun MovieGrid(
 }
 
 @Composable
+fun MovieGridExpanded(
+    navController: NavHostController,
+    movies: List<Movie>,
+    columns: Int,
+    viewModel: MainViewModel
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columns),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .padding(top = 120.dp, start = 100.dp, end = 20.dp)
+    ) {
+        items(movies) { movie ->
+            MovieCard(navController, movie, viewModel)
+        }
+    }
+}
+
+@Composable
 fun MovieCard(
     navController: NavHostController,
     movie: Movie,
@@ -128,28 +148,36 @@ fun MovieCard(
             model = "https://image.tmdb.org/t/p/w780/${movie.poster_path}",
             contentDescription = "Image du film"
         )
-        IconButton(
-            onClick = {
-                scope.launch {
-                    viewModel.toggleFavorite(movie)
-                }
-            },
+        Row(
             modifier = Modifier
-                .padding(8.dp)
-        )
-         {
-            Icon(
-                imageVector = if (movie.isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                contentDescription = if (movie.isFav) "Retirer des favoris" else "Ajouter aux favoris",
-                tint = MaterialTheme.colorScheme.primary
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = movie.original_title,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.weight(1f)
             )
+
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        viewModel.toggleFavorite(movie)
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 8.dp)
+            ) {
+                Icon(
+                    imageVector = if (movie.isFav) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = if (movie.isFav) "Retirer des favoris" else "Ajouter aux favoris",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
-        Text(
-            modifier = Modifier.padding(6.dp),
-            textAlign = TextAlign.Center,
-            text = movie.original_title,
-            fontWeight = FontWeight.Bold,
-            )
         Text(
             modifier = Modifier.padding(2.dp),
             textAlign = TextAlign.Center,

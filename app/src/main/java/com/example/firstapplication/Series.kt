@@ -80,7 +80,7 @@ fun SeriesFunExpanded(
             } else if (errorMessage != null) {
                 ErrorMessage(errorMessage)
             } else {
-                SeriesGrid(navController, series, columns = 4)
+                SeriesGridExpanded(navController, series, columns = 4)
             }
         }
     }
@@ -105,6 +105,24 @@ fun SeriesGrid(
     }
 }
 
+@Composable
+fun SeriesGridExpanded(
+    navController: NavHostController,
+    series: List<TvShow>,
+    columns: Int
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columns),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .padding(top = 120.dp, start = 100.dp, end = 20.dp)
+    ) {
+        items(series) { serie ->
+            SerieCard(navController, serie)
+        }
+    }
+}
 @Composable
 fun SerieCard(
     navController: NavHostController,

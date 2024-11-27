@@ -52,7 +52,7 @@ fun ActorsFunCompact(actors: List<Person>) {
 fun ActorsFunExpanded(actors: List<Person>) {
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            ActorsGrid( actors, columns = 4)
+            ActorsGridExpanded( actors, columns = 4)
         }
     }
 }
@@ -68,6 +68,23 @@ fun ActorsGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .padding(top = 120.dp, start = 20.dp, end = 20.dp, bottom = 110.dp)
+    ) {
+        items(actors) { actor ->
+            ActorCard(actor)
+        }
+    }
+}
+@Composable
+fun ActorsGridExpanded(
+    actors: List<Person>,
+    columns: Int
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columns),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .padding(top = 120.dp, start = 100.dp, end = 20.dp)
     ) {
         items(actors) { actor ->
             ActorCard(actor)
