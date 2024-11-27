@@ -82,8 +82,8 @@ fun ActorCard(castMember: Cast, cornerRadius: Int = 8) {
 }
 @Composable
 fun Poster(posterPath: String, isLandscape: Boolean = false) {
-    val width = if (isLandscape) 200.dp else 200.dp // Plus petit en paysage
-    val height = if (isLandscape) 300.dp else 450.dp // Plus petit en paysage
+    val width = if (isLandscape) 200.dp else 200.dp
+    val height = if (isLandscape) 300.dp else 450.dp
 
     RoundedImage(
         imageUrl = "https://image.tmdb.org/t/p/w780/$posterPath",

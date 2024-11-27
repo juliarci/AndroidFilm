@@ -69,7 +69,7 @@ fun FilmFun(
                         }
 
                         item(span = { GridItemSpan(3) }) {
-                            Poster(film.poster_path)
+                            film.poster_path?.let { it1 -> Poster(it1) }
                         }
 
                         item(span = { GridItemSpan(3) }) {
@@ -126,7 +126,7 @@ fun FilmFun(
                         }
 
                         item(span = { GridItemSpan(1) }) {
-                            Poster(film.poster_path, isLandscape = true)
+                            film.poster_path?.let { it1 -> Poster(it1, isLandscape = true) }
                         }
                         item(span = { GridItemSpan(3) }) {
                             Column(modifier = Modifier.padding(start = 26.dp, top = 16.dp, end = 16.dp)) {

@@ -60,7 +60,11 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                             .padding(bottom = 100.dp, top = 80.dp, start = 16.dp, end = 16.dp)
                     ) {
                         item(span = { GridItemSpan(3) }) { SerieTitle(serie.name) }
-                        item(span = { GridItemSpan(3) }) { Poster(serie.poster_path) }
+                        item(span = { GridItemSpan(3) }) { serie.poster_path?.let { it1 ->
+                            Poster(
+                                it1
+                            )
+                        } }
                         item(span = { GridItemSpan(3) }) { SerieDescription(serie.overview) }
                         item(span = { GridItemSpan(3) }) { SerieGenres(serie.genres) }
                         item(span = { GridItemSpan(3) }) {
@@ -102,7 +106,7 @@ fun SerieFun(navController: NavHostController, viewModel: MainViewModel, id: Str
                         item(span = { GridItemSpan(4) }) { SerieTitle(serie.name) }
 
                         item(span = { GridItemSpan(1) }) {
-                            Poster(serie.poster_path, isLandscape = true)
+                            serie.poster_path?.let { it1 -> Poster(it1, isLandscape = true) }
                         }
                         item(span = { GridItemSpan(3) }) {
                             Column(modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)) {
