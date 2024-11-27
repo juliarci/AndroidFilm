@@ -46,7 +46,11 @@ object AppModule {
 
   @Singleton
   @Provides
-  fun provideRepository(@RealApi api: TmdbAPI, filmDao: FilmDao, serieDao: SerieDao, actorDao: ActorDao) = Repository(api, filmDao, serieDao, actorDao)
+  fun provideRepository(@RealApi api: TmdbAPI, filmDao: FilmDao, serieDao: SerieDao) = Repository(
+    api,
+    filmDao,
+    serieDao
+  )
 
   @Singleton
   @Provides

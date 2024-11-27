@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -150,7 +149,8 @@ class MainActivity : ComponentActivity() {
                                 )
                                 if (!currentDestination.hasRoute<Actors>() && !currentDestination.hasRoute<Series>()) {
                                     IconButton(
-                                        onClick = { viewModel.toggleFavoritesOnly() }
+                                        onClick = { viewModel.toggleFavoritesOnly()
+                                        searchText = ""}
                                     ) {
                                         Icon(
                                             imageVector = if (favoritesOnly) Icons.Default.Favorite else Icons.Default.FavoriteBorder,

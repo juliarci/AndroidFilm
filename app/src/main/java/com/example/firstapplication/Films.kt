@@ -18,7 +18,6 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.example.firstapplication.daos.FilmDao
 import com.example.firstapplication.model.Movie
 import com.example.firstapplication.ui.utils.ErrorMessage
 import com.example.firstapplication.ui.utils.LoadingIndicator

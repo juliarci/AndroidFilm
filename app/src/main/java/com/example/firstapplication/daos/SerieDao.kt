@@ -8,8 +8,6 @@ import com.example.firstapplication.entities.SerieEntity
 
 @Dao
 interface SerieDao {
-    @Query("SELECT * FROM series")
-    suspend fun getFavSeries(): List<SerieEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSerie(film: SerieEntity)

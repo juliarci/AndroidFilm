@@ -1,6 +1,5 @@
 package com.example.firstapplication
 
-import com.example.firstapplication.daos.ActorDao
 import com.example.firstapplication.daos.FilmDao
 import com.example.firstapplication.daos.SerieDao
 import com.example.firstapplication.entities.FilmEntity
@@ -10,7 +9,11 @@ import com.example.firstapplication.model.TvShow
 import javax.inject.Inject
 
 
-class Repository @Inject constructor(private val tmdbApi: TmdbAPI, private val filmDao: FilmDao, private val serieDao: SerieDao, private val actorDao: ActorDao) {
+class Repository @Inject constructor(
+    private val tmdbApi: TmdbAPI,
+    private val filmDao: FilmDao,
+    private val serieDao: SerieDao
+) {
     private val apiKey = "ca096d89c07f759c710e701ad181fd06"
 
     suspend fun searchMovies(keyWord: String): List<Movie> {
