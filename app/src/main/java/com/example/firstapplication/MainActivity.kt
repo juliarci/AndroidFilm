@@ -286,7 +286,7 @@ class MainActivity : ComponentActivity() {
                             FilmsFun(navController, viewModel, windowSizeClass)
                         }
                         composable<Musics> {
-                            MusicsFun()
+                            MusicsFun(viewModel, windowSizeClass)
                         }
                         composable<Actors> {
                             ActorsFun(viewModel, windowSizeClass)
