@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,6 +67,9 @@ data class Serie(val id: String)
 
 @Serializable
 class Actors
+
+@Serializable
+class Musics
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -171,6 +175,19 @@ class MainActivity : ComponentActivity() {
                                         NavigationBarItem(
                                             icon = {
                                                 Icon(
+                                                    Icons.Rounded.Star,
+                                                    contentDescription = "Music Icon"
+                                                )
+                                            },
+                                            label = { Text("Page musique") },
+                                            selected = currentDestination.hasRoute<Musics>(),
+                                            onClick = {
+                                                navController.navigate(Musics())
+                                                searchText = ""
+                                            })
+                                        NavigationBarItem(
+                                            icon = {
+                                                Icon(
                                                     Icons.Rounded.Menu,
                                                     contentDescription = "Film Icon"
                                                 )
@@ -267,6 +284,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<Films> {
                             FilmsFun(navController, viewModel, windowSizeClass)
+                        }
+                        composable<Musics> {
+                            MusicsFun()
                         }
                         composable<Actors> {
                             ActorsFun(viewModel, windowSizeClass)

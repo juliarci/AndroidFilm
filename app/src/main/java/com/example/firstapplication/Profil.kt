@@ -173,7 +173,7 @@ fun ComposeButton(navController: NavHostController) {
 @Composable
 fun StartButton(navController: NavHostController) {
     Button(
-        onClick = { navController.navigate(Films()) },
+        onClick = { navController.navigate(Musics()) },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF6D7387)
         )
