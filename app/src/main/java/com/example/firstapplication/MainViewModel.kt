@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.firstapplication.model.FilmDetail
 import com.example.firstapplication.model.Movie
 import com.example.firstapplication.model.Person
+import com.example.firstapplication.model.Playlist
 import com.example.firstapplication.model.SerieDetail
 import com.example.firstapplication.model.TvShow
+import com.squareup.moshi.Moshi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val repo: Repository) : ViewModel() {
 
     //API Request parameters
+    var playlist = MutableStateFlow<Playlist?>(null)
     val movies = MutableStateFlow<List<Movie>>(listOf())
     val series = MutableStateFlow<List<TvShow>>(listOf())
     val persons = MutableStateFlow<List<Person>>(listOf())
@@ -28,6 +31,15 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
     val errorMessage: StateFlow<String?> = _errorMessage
     private val _favoritesOnly = MutableStateFlow(false)
     val favoritesOnly: StateFlow<Boolean> = _favoritesOnly
+
+    fun fecthPlaylist(): Playlist {
+        val actorJsonAdapter = Moshi.Builder().build().adapter(Playlist::class.java)
+        return actorJsonAdapter.fromJson(playlistjson)!!
+    }
+
+    fun getPlayList(){
+            playlist.value = fecthPlaylist()
+    }
 
     fun searchMovies(keyWord: String) {
         viewModelScope.launch {
@@ -103,7 +115,8 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
             try {
                 filmDetail.value = repo.filmDetail(id)
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur lors de la récupération des détails du film : ${e.message}"
+                _errorMessage.value =
+                    "Erreur lors de la récupération des détails du film : ${e.message}"
             } finally {
                 _isLoading.value = false
             }
@@ -183,7 +196,8 @@ class MainViewModel @Inject constructor(private val repo: Repository) : ViewMode
                 }
                 persons.value = results
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur lors de la récupération des personnes tendances : ${e.message}"
+                _errorMessage.value =
+                    "Erreur lors de la récupération des personnes tendances : ${e.message}"
             } finally {
                 _isLoading.value = false
             }

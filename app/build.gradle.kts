@@ -96,6 +96,8 @@ dependencies {
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
     kapt(libs.androidx.hilt.compiler)
     kapt(libs.kotlinx.metadata.jvm)
+
+
 }
 
 kapt {
